@@ -1,0 +1,125 @@
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { ArrowRight02Icon } from "@hugeicons/core-free-icons";
+import Link from "next/link";
+import { levelBadgeClasses } from "@/lib/utils";
+
+const paths = [
+  {
+    title: "Solana Fundamentals",
+    description:
+      "Accounts, transactions, PDAs, and the Solana programming model from scratch.",
+    lessons: 12,
+    xp: 1200,
+    level: "Beginner",
+    slug: "solana-fundamentals",
+  },
+  {
+    title: "Anchor Development",
+    description:
+      "Build, test, and deploy Solana programs using the Anchor framework.",
+    lessons: 16,
+    xp: 2400,
+    level: "Intermediate",
+    slug: "anchor-development",
+  },
+  {
+    title: "Token Engineering",
+    description:
+      "Token-2022 extensions, Metaplex Core, soulbound tokens, and token economics.",
+    lessons: 10,
+    xp: 2000,
+    level: "Advanced",
+    slug: "token-engineering",
+  },
+];
+
+export function LearningPaths() {
+  return (
+    <section>
+      <div className="mx-auto max-w-6xl px-4 py-20 md:py-24">
+        <div className="mb-12 flex items-end justify-between">
+          <div className="max-w-lg">
+            <h2 className="text-2xl font-semibold tracking-tight text-foreground md:text-3xl">
+              Learning Paths
+            </h2>
+            <p className="mt-2 text-muted-foreground">
+              Structured tracks from zero to deployed program. Each path awards
+              XP and a credential NFT on completion.
+            </p>
+          </div>
+          <Link href="/courses" className="hidden md:block">
+            <Button variant="ghost" size="sm">
+              View all
+              <HugeiconsIcon
+                icon={ArrowRight02Icon}
+                size={14}
+                data-icon="inline-end"
+              />
+            </Button>
+          </Link>
+        </div>
+
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {paths.map((path, i) => (
+            <Card
+              key={path.slug}
+              className="animate-fade-in flex flex-col"
+              style={{ animationDelay: `${i * 100}ms` }}
+            >
+              <CardHeader className="flex-1">
+                <CardTitle>{path.title}</CardTitle>
+                <CardDescription className="line-clamp-2">{path.description}</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center gap-2">
+                  <Badge variant="outline" className={`border-transparent ${levelBadgeClasses(path.level)}`}>{path.level}</Badge>
+                  <span className="text-xs text-muted-foreground">
+                    {path.lessons} lessons
+                  </span>
+                  <span className="text-xs text-muted-foreground">
+                    {path.xp.toLocaleString()} XP
+                  </span>
+                </div>
+              </CardContent>
+              <CardFooter>
+                <Link href={`/courses/${path.slug}`} className="w-full">
+                  <Button variant="outline" size="lg" className="w-full">
+                    Start Learning
+                    <HugeiconsIcon
+                      icon={ArrowRight02Icon}
+                      size={14}
+                      data-icon="inline-end"
+                    />
+                  </Button>
+                </Link>
+              </CardFooter>
+            </Card>
+          ))}
+        </div>
+
+        <div className="mt-6 text-center md:hidden">
+          <Link href="/courses">
+            <Button variant="ghost" size="sm">
+              View all courses
+              <HugeiconsIcon
+                icon={ArrowRight02Icon}
+                size={14}
+                data-icon="inline-end"
+              />
+            </Button>
+          </Link>
+        </div>
+      </div>
+    </section>
+  );
+}
