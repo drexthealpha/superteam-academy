@@ -13,6 +13,7 @@ import {
   Award01Icon,
 } from "@hugeicons/core-free-icons";
 import { leaderboardService } from "@/lib/services";
+import { getTranslations } from "next-intl/server";
 
 function truncateWallet(wallet: string) {
   return `${wallet.slice(0, 4)}...${wallet.slice(-4)}`;
@@ -46,16 +47,16 @@ function rankColor(rank: number) {
 
 export default async function LeaderboardPage() {
   const entries = await leaderboardService.getLeaderboard(20);
+  const t = await getTranslations();
 
   return (
     <div className="py-4">
       <div className="mb-10">
         <h1 className="text-3xl font-bold tracking-tight text-foreground">
-          Leaderboard
+          {t("leaderboard.heading")}
         </h1>
         <p className="mt-2 max-w-lg text-muted-foreground">
-          Top learners ranked by XP. Powered by on-chain Token-2022 balances via
-          Helius DAS API.
+          {t("leaderboard.description")}
         </p>
       </div>
 
@@ -96,9 +97,9 @@ export default async function LeaderboardPage() {
                   <span className="text-sm text-muted-foreground">XP</span>
                 </div>
                 <div className="mt-2 flex items-center gap-2">
-                  <Badge variant="secondary">Level {entry.level}</Badge>
+                  <Badge variant="secondary">{t("common.level", { level: entry.level })}</Badge>
                   <span className="text-xs text-muted-foreground">
-                    {entry.credentialCount} credential{entry.credentialCount !== 1 ? "s" : ""}
+                    {t("common.credentials", { count: entry.credentialCount })}
                   </span>
                 </div>
               </CardContent>
@@ -111,11 +112,11 @@ export default async function LeaderboardPage() {
       <div className="overflow-hidden rounded-xl border border-border">
         {/* Table header */}
         <div className="grid grid-cols-[3rem_1fr_6rem_5rem_5rem] gap-4 border-b border-border bg-muted/40 px-4 py-2.5 text-xs font-medium text-muted-foreground sm:grid-cols-[3rem_1fr_8rem_5rem_6rem]">
-          <span>Rank</span>
-          <span>Learner</span>
-          <span className="text-right">XP</span>
-          <span className="text-right">Level</span>
-          <span className="hidden text-right sm:block">Credentials</span>
+          <span>{t("leaderboard.rank")}</span>
+          <span>{t("leaderboard.learner")}</span>
+          <span className="text-right">{t("leaderboard.xp")}</span>
+          <span className="text-right">{t("courses.levelLabel")}</span>
+          <span className="hidden text-right sm:block">{t("common.credentials", { count: 2 })}</span>
         </div>
 
         {/* Table rows */}

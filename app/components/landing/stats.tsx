@@ -1,11 +1,15 @@
-const stats = [
-  { label: "Courses", value: "12+" },
-  { label: "Lessons", value: "150+" },
-  { label: "XP Distributed", value: "2.4M" },
-  { label: "Credentials Issued", value: "850+" },
-];
+import { useTranslations } from "next-intl";
 
 export function Stats() {
+  const t = useTranslations("stats");
+
+  const stats = [
+    { label: t("courses"), value: "12+" },
+    { label: t("lessons"), value: "150+" },
+    { label: t("xpDistributed"), value: "2.4M" },
+    { label: t("credentialsIssued"), value: "850+" },
+  ];
+
   return (
     <section className="border-y border-border">
       <div className="mx-auto max-w-6xl px-4 py-16">

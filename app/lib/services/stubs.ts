@@ -7,6 +7,8 @@ import type {
   LeaderboardService,
   EnrollmentAction,
   LessonAction,
+  UserService,
+  CredentialService,
   Course,
   Lesson,
   XpSummary,
@@ -14,6 +16,8 @@ import type {
   Credential,
   Enrollment,
   LeaderboardEntry,
+  UserProfile,
+  ActivityEntry,
 } from "./types";
 
 // -- Mock data --
@@ -237,5 +241,139 @@ export const lessonAction: LessonAction = {
   async completeLesson() {
     // Stub: will be backend-signed
     return { success: true, xpAwarded: 100 };
+  },
+};
+
+// -- User profile stubs --
+
+const MOCK_CREDENTIALS: Credential[] = [
+  {
+    id: "cred-1",
+    track: "Solana Fundamentals",
+    level: 1,
+    mintAddress: "CrED1soLFundAmentALs111111111111111111111111",
+    issuedAt: "2026-02-15",
+  },
+  {
+    id: "cred-2",
+    track: "Anchor Development",
+    level: 2,
+    mintAddress: "CrED2AnchorDev222222222222222222222222222222",
+    issuedAt: "2026-02-22",
+  },
+];
+
+export const userService: UserService = {
+  async getProfile(): Promise<UserProfile> {
+    return {
+      wallet: "7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU",
+      username: "solanabr.sol",
+      joinedAt: "2026-01-15",
+      xp: { total: 2700, level: 5 },
+      streak: {
+        current: 5,
+        longest: 12,
+        lastActiveDate: new Date().toISOString().split("T")[0],
+      },
+      credentials: MOCK_CREDENTIALS,
+      enrollments: [
+        {
+          courseSlug: "solana-fundamentals",
+          enrolledAt: "2026-02-10",
+          completedLessons: 12,
+          totalLessons: 12,
+          isCompleted: true,
+        },
+        {
+          courseSlug: "anchor-development",
+          enrolledAt: "2026-02-16",
+          completedLessons: 5,
+          totalLessons: 16,
+          isCompleted: false,
+        },
+        {
+          courseSlug: "token-engineering",
+          enrolledAt: "2026-02-25",
+          completedLessons: 1,
+          totalLessons: 10,
+          isCompleted: false,
+        },
+      ],
+    };
+  },
+
+  async getPublicProfile(username: string): Promise<UserProfile | null> {
+    const profiles: Record<string, UserProfile> = {
+      "solanabr.sol": {
+        wallet: "7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU",
+        username: "solanabr.sol",
+        joinedAt: "2026-01-15",
+        xp: { total: 2700, level: 5 },
+        streak: { current: 5, longest: 12, lastActiveDate: "2026-03-01" },
+        credentials: MOCK_CREDENTIALS,
+        enrollments: [
+          { courseSlug: "solana-fundamentals", enrolledAt: "2026-02-10", completedLessons: 12, totalLessons: 12, isCompleted: true },
+          { courseSlug: "anchor-development", enrolledAt: "2026-02-16", completedLessons: 5, totalLessons: 16, isCompleted: false },
+        ],
+      },
+      "drexalpha.sol": {
+        wallet: "9WzDXwBbmkg8ZTbNMqUxvQRAyrZzDsGYdLVL9zYtAWWM",
+        username: "drexalpha.sol",
+        joinedAt: "2026-01-20",
+        xp: { total: 1800, level: 4 },
+        streak: { current: 3, longest: 8, lastActiveDate: "2026-03-01" },
+        credentials: [MOCK_CREDENTIALS[0]],
+        enrollments: [
+          { courseSlug: "solana-fundamentals", enrolledAt: "2026-02-12", completedLessons: 12, totalLessons: 12, isCompleted: true },
+        ],
+      },
+    };
+    return profiles[username] ?? null;
+  },
+
+  async getActivity(): Promise<ActivityEntry[]> {
+    return [
+      {
+        id: "act-1",
+        type: "lesson_completed",
+        label: "Completed lesson",
+        detail: "Build a Soulbound Token",
+        date: "2026-03-01",
+      },
+      {
+        id: "act-2",
+        type: "credential_earned",
+        label: "Earned credential",
+        detail: "Solana Fundamentals",
+        date: "2026-02-22",
+      },
+      {
+        id: "act-3",
+        type: "enrolled",
+        label: "Enrolled in",
+        detail: "Token Engineering",
+        date: "2026-02-25",
+      },
+      {
+        id: "act-4",
+        type: "lesson_completed",
+        label: "Completed lesson",
+        detail: "Deploy to Devnet",
+        date: "2026-02-20",
+      },
+      {
+        id: "act-5",
+        type: "lesson_completed",
+        label: "Completed lesson",
+        detail: "Build a Voting Program",
+        date: "2026-02-19",
+      },
+    ];
+  },
+};
+
+export const credentialService: CredentialService = {
+  async getCredential(id: string): Promise<Credential | null> {
+    return MOCK_CREDENTIALS.find((c) => c.id === id) ?? null;
   },
 };

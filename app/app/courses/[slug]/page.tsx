@@ -19,6 +19,7 @@ import {
 import { courseService } from "@/lib/services";
 import type { Lesson } from "@/lib/services";
 import { levelBadgeClasses } from "@/lib/utils";
+import { getTranslations } from "next-intl/server";
 
 function lessonTypeIcon(type: Lesson["type"]) {
   switch (type) {
@@ -28,17 +29,6 @@ function lessonTypeIcon(type: Lesson["type"]) {
       return SourceCodeSquareIcon;
     case "quiz":
       return CheckmarkCircle02Icon;
-  }
-}
-
-function lessonTypeLabel(type: Lesson["type"]) {
-  switch (type) {
-    case "reading":
-      return "Reading";
-    case "coding":
-      return "Coding";
-    case "quiz":
-      return "Quiz";
   }
 }
 
@@ -55,12 +45,25 @@ export default async function CourseDetailPage({
 
   if (!course) notFound();
 
+  const t = await getTranslations();
+
+  function lessonTypeLabel(type: Lesson["type"]) {
+    switch (type) {
+      case "reading":
+        return t("courses.reading");
+      case "coding":
+        return t("courses.coding");
+      case "quiz":
+        return t("courses.quiz");
+    }
+  }
+
   return (
     <div className="py-4">
       {/* Breadcrumb */}
       <div className="mb-6 flex items-center gap-2 text-sm text-muted-foreground">
         <Link href="/courses" className="transition-colors hover:text-foreground">
-          Courses
+          {t("nav.courses")}
         </Link>
         <span>/</span>
         <span className="text-foreground">{course.title}</span>
@@ -72,7 +75,7 @@ export default async function CourseDetailPage({
           <div className="mb-3 flex items-center gap-2">
             <Badge variant="outline" className={`border-transparent ${levelBadgeClasses(course.level)}`}>{course.level}</Badge>
             <span className="text-xs text-muted-foreground">
-              by {course.creator}
+              {t("courses.by", { creator: course.creator })}
             </span>
           </div>
           <h1 className="text-3xl font-bold tracking-tight text-foreground md:text-4xl">
@@ -86,31 +89,31 @@ export default async function CourseDetailPage({
         {/* Enrollment card */}
         <Card className="w-full shrink-0 lg:w-72">
           <CardHeader>
-            <CardTitle className="text-base">Course Overview</CardTitle>
+            <CardTitle className="text-base">{t("courses.courseOverview")}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex flex-col gap-3">
               <div className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground">Lessons</span>
+                <span className="text-muted-foreground">{t("courses.lessonsLabel")}</span>
                 <span className="font-medium text-foreground">
                   {course.lessonCount}
                 </span>
               </div>
               <div className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground">Total XP</span>
+                <span className="text-muted-foreground">{t("courses.totalXp")}</span>
                 <span className="font-medium text-foreground">
                   {course.totalXp.toLocaleString()}
                 </span>
               </div>
               <div className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground">Level</span>
+                <span className="text-muted-foreground">{t("courses.levelLabel")}</span>
                 <span className="font-medium text-foreground">
                   {course.level}
                 </span>
               </div>
               <Separator className="my-1" />
               <Button size="lg" className="w-full">
-                Enroll Now
+                {t("common.enrollNow")}
                 <HugeiconsIcon
                   icon={ArrowRight02Icon}
                   size={14}
@@ -118,7 +121,7 @@ export default async function CourseDetailPage({
                 />
               </Button>
               <p className="text-center text-xs text-muted-foreground">
-                Requires a Solana wallet
+                {t("common.requiresWallet")}
               </p>
             </div>
           </CardContent>
@@ -128,12 +131,12 @@ export default async function CourseDetailPage({
       {/* Syllabus */}
       <div>
         <h2 className="mb-4 text-xl font-semibold tracking-tight text-foreground">
-          Syllabus
+          {t("courses.syllabus")}
         </h2>
 
         {lessons.length === 0 ? (
           <p className="text-sm text-muted-foreground">
-            Lessons for this course are coming soon.
+            {t("courses.syllabusComingSoon")}
           </p>
         ) : (
           <div className="flex flex-col">

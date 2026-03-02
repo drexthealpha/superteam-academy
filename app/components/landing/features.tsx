@@ -11,45 +11,43 @@ import {
   BookOpen01Icon,
   Shield01Icon,
 } from "@hugeicons/core-free-icons";
-
-const features = [
-  {
-    icon: BookOpen01Icon,
-    title: "Interactive Courses",
-    description:
-      "Hands-on Solana development with in-browser coding challenges. Build real programs, not just watch videos.",
-  },
-  {
-    icon: Blockchain01Icon,
-    title: "On-Chain XP",
-    description:
-      "Earn soulbound Token-2022 XP for every lesson completed. Your progress is permanent and verifiable on Solana.",
-  },
-  {
-    icon: Award01Icon,
-    title: "Credential NFTs",
-    description:
-      "Receive Metaplex Core NFTs as proof of mastery. Soulbound credentials that upgrade as you advance through tracks.",
-  },
-  {
-    icon: Shield01Icon,
-    title: "Decentralized & Trustless",
-    description:
-      "Course enrollments and completions recorded on-chain. No central authority controls your learning record.",
-  },
-];
+import { useTranslations } from "next-intl";
 
 export function Features() {
+  const t = useTranslations("features");
+
+  const features = [
+    {
+      icon: BookOpen01Icon,
+      title: t("interactiveCourses"),
+      description: t("interactiveCoursesDesc"),
+    },
+    {
+      icon: Blockchain01Icon,
+      title: t("onChainXp"),
+      description: t("onChainXpDesc"),
+    },
+    {
+      icon: Award01Icon,
+      title: t("credentialNfts"),
+      description: t("credentialNftsDesc"),
+    },
+    {
+      icon: Shield01Icon,
+      title: t("decentralized"),
+      description: t("decentralizedDesc"),
+    },
+  ];
+
   return (
     <section className="border-t border-border bg-muted/30">
       <div className="mx-auto max-w-6xl px-4 py-20 md:py-24">
         <div className="mb-12 max-w-lg">
           <h2 className="text-2xl font-semibold tracking-tight text-foreground md:text-3xl">
-            Why Superteam Academy
+            {t("heading")}
           </h2>
           <p className="mt-2 text-muted-foreground">
-            A learning platform built for the Solana ecosystem, where your
-            achievements are as permanent as the blockchain.
+            {t("description")}
           </p>
         </div>
 

@@ -3,32 +3,33 @@ import { Badge } from "@/components/ui/badge";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { ArrowRight02Icon } from "@hugeicons/core-free-icons";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 export function Hero() {
+  const t = useTranslations("hero");
+
   return (
     <section className="relative overflow-hidden">
       <div className="mx-auto max-w-6xl px-4 py-24 md:py-32">
         <div className="flex max-w-2xl flex-col gap-6">
           <Badge variant="outline" className="w-fit animate-fade-in">
-            Built on Solana
+            {t("badge")}
           </Badge>
 
           <h1 className="animate-fade-in text-4xl font-bold tracking-tight text-foreground [animation-delay:100ms] md:text-5xl lg:text-6xl">
-            Learn to build on&nbsp;Solana.
+            {t("titleLine1")}
             <br />
-            <span className="text-primary">Earn on-chain proof.</span>
+            <span className="text-primary">{t("titleLine2")}</span>
           </h1>
 
           <p className="animate-fade-in text-lg text-muted-foreground [animation-delay:200ms] md:text-xl">
-            Master Solana development through interactive courses. Earn
-            soulbound XP tokens and verifiable credential NFTs that live in your
-            wallet forever.
+            {t("description")}
           </p>
 
           <div className="flex animate-fade-in items-center gap-3 [animation-delay:300ms]">
             <Link href="/courses">
               <Button size="lg">
-                Explore Courses
+                {t("exploreCourses")}
                 <HugeiconsIcon
                   icon={ArrowRight02Icon}
                   size={16}
@@ -38,7 +39,7 @@ export function Hero() {
             </Link>
             <Link href="/leaderboard">
               <Button variant="outline" size="lg">
-                View Leaderboard
+                {t("viewLeaderboard")}
               </Button>
             </Link>
           </div>

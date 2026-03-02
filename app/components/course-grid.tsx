@@ -14,14 +14,23 @@ import { Button } from "@/components/ui/button";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { ArrowRight02Icon } from "@hugeicons/core-free-icons";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import type { Course } from "@/lib/services";
 import { levelBadgeClasses } from "@/lib/utils";
 
 const filters = ["All", "Beginner", "Intermediate", "Advanced"] as const;
 type Filter = (typeof filters)[number];
 
+const filterKeys: Record<Filter, string> = {
+  All: "filterAll",
+  Beginner: "filterBeginner",
+  Intermediate: "filterIntermediate",
+  Advanced: "filterAdvanced",
+};
+
 export function CourseGrid({ courses }: { courses: Course[] }) {
   const [active, setActive] = useState<Filter>("All");
+  const t = useTranslations();
 
   const filtered =
     active === "All"
@@ -44,7 +53,7 @@ export function CourseGrid({ courses }: { courses: Course[] }) {
                   : "cursor-pointer"
               }
             >
-              {f}
+              {t(`courses.${filterKeys[f]}`)}
             </Badge>
           </button>
         ))}
@@ -73,17 +82,17 @@ export function CourseGrid({ courses }: { courses: Course[] }) {
                   {course.level}
                 </Badge>
                 <span className="text-xs text-muted-foreground">
-                  {course.lessonCount} lessons
+                  {t("common.lessons", { count: course.lessonCount })}
                 </span>
                 <span className="text-xs text-muted-foreground">
-                  {course.totalXp.toLocaleString()} XP
+                  {t("common.xp", { amount: course.totalXp.toLocaleString() })}
                 </span>
               </div>
             </CardContent>
             <CardFooter>
               <Link href={`/courses/${course.slug}`} className="w-full">
                 <Button variant="outline" size="lg" className="w-full">
-                  View Course
+                  {t("common.viewCourse")}
                   <HugeiconsIcon
                     icon={ArrowRight02Icon}
                     size={14}
@@ -98,7 +107,7 @@ export function CourseGrid({ courses }: { courses: Course[] }) {
 
       {filtered.length === 0 && (
         <p className="py-12 text-center text-sm text-muted-foreground">
-          No courses match this filter.
+          {t("courses.noCoursesMatch")}
         </p>
       )}
     </>

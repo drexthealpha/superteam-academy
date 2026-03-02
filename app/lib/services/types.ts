@@ -103,3 +103,33 @@ export interface LessonAction {
     lessonId: string
   ): Promise<{ success: boolean; xpAwarded?: number }>;
 }
+
+// -- User Profile --
+
+export interface UserProfile {
+  wallet: string;
+  username?: string;
+  joinedAt: string; // ISO date
+  xp: XpSummary;
+  streak: StreakData;
+  credentials: Credential[];
+  enrollments: Enrollment[];
+}
+
+export interface ActivityEntry {
+  id: string;
+  type: "lesson_completed" | "credential_earned" | "enrolled";
+  label: string;
+  detail: string;
+  date: string; // ISO date
+}
+
+export interface UserService {
+  getProfile(walletAddress?: string): Promise<UserProfile>;
+  getPublicProfile(username: string): Promise<UserProfile | null>;
+  getActivity(walletAddress?: string): Promise<ActivityEntry[]>;
+}
+
+export interface CredentialService {
+  getCredential(id: string): Promise<Credential | null>;
+}

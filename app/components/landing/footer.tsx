@@ -1,45 +1,57 @@
 import Link from "next/link";
 import { Separator } from "@/components/ui/separator";
-
-const footerLinks = {
-  platform: [
-    { label: "Courses", href: "/courses" },
-    { label: "Leaderboard", href: "/leaderboard" },
-    { label: "Dashboard", href: "/dashboard" },
-  ],
-  resources: [
-    { label: "Documentation", href: "#" },
-    { label: "GitHub", href: "https://github.com/solanabr/superteam-academy" },
-    { label: "Solana Docs", href: "https://solana.com/docs" },
-  ],
-  community: [
-    { label: "Superteam", href: "https://superteam.fun" },
-    { label: "Discord", href: "#" },
-    { label: "Twitter", href: "#" },
-  ],
-};
+import { useTranslations } from "next-intl";
 
 export function Footer() {
+  const t = useTranslations();
+
+  const footerLinks = {
+    platform: {
+      label: t("footer.platform"),
+      links: [
+        { label: t("nav.courses"), href: "/courses" },
+        { label: t("nav.leaderboard"), href: "/leaderboard" },
+        { label: t("nav.dashboard"), href: "/dashboard" },
+      ],
+    },
+    resources: {
+      label: t("footer.resources"),
+      links: [
+        { label: t("footer.documentation"), href: "#" },
+        { label: "GitHub", href: "https://github.com/solanabr/superteam-academy" },
+        { label: t("footer.solanaDocs"), href: "https://solana.com/docs" },
+      ],
+    },
+    community: {
+      label: t("footer.community"),
+      links: [
+        { label: "Superteam", href: "https://superteam.fun" },
+        { label: "Discord", href: "#" },
+        { label: "Twitter", href: "#" },
+      ],
+    },
+  };
+
   return (
     <footer className="bg-muted/30">
       <div className="mx-auto max-w-6xl px-4 py-12">
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           <div>
             <span className="text-sm font-semibold text-foreground">
-              Superteam Academy
+              {t("common.brandName")}
             </span>
             <p className="mt-2 text-sm text-muted-foreground">
-              Solana-native learning platform with on-chain credentials.
+              {t("footer.tagline")}
             </p>
           </div>
 
-          {Object.entries(footerLinks).map(([category, links]) => (
-            <div key={category}>
-              <span className="text-sm font-medium capitalize text-foreground">
-                {category}
+          {Object.values(footerLinks).map((section) => (
+            <div key={section.label}>
+              <span className="text-sm font-medium text-foreground">
+                {section.label}
               </span>
               <ul className="mt-3 flex flex-col gap-2">
-                {links.map((link) => (
+                {section.links.map((link) => (
                   <li key={link.label}>
                     <Link
                       href={link.href}
@@ -58,10 +70,10 @@ export function Footer() {
 
         <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
           <p className="text-xs text-muted-foreground">
-            Built on Solana. Open source.
+            {t("common.openSource")}
           </p>
           <p className="text-xs text-muted-foreground">
-            Superteam Brazil &middot; 2026
+            {t("common.copyright")}
           </p>
         </div>
       </div>

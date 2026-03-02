@@ -22,6 +22,7 @@ import {
   learningProgressService,
   courseService,
 } from "@/lib/services";
+import { getTranslations } from "next-intl/server";
 
 export default async function DashboardPage() {
   const [xp, streak, credentials, enrollments, courses] = await Promise.all([
@@ -32,16 +33,17 @@ export default async function DashboardPage() {
     courseService.getCourses(),
   ]);
 
+  const t = await getTranslations();
   const courseMap = new Map(courses.map((c) => [c.slug, c]));
 
   return (
     <div className="py-4">
       <div className="mb-10">
         <h1 className="text-3xl font-bold tracking-tight text-foreground">
-          Dashboard
+          {t("dashboard.heading")}
         </h1>
         <p className="mt-2 text-muted-foreground">
-          Your learning progress at a glance.
+          {t("dashboard.description")}
         </p>
       </div>
 
@@ -57,7 +59,7 @@ export default async function DashboardPage() {
                 <p className="text-2xl font-bold tracking-tight text-foreground">
                   {xp.total.toLocaleString()}
                 </p>
-                <p className="text-xs text-muted-foreground">Total XP</p>
+                <p className="text-xs text-muted-foreground">{t("dashboard.totalXp")}</p>
               </div>
             </div>
           </CardContent>
@@ -73,7 +75,7 @@ export default async function DashboardPage() {
                 <p className="text-2xl font-bold tracking-tight text-foreground">
                   {streak.current}
                 </p>
-                <p className="text-xs text-muted-foreground">Day Streak</p>
+                <p className="text-xs text-muted-foreground">{t("dashboard.dayStreak")}</p>
               </div>
             </div>
           </CardContent>
@@ -89,7 +91,7 @@ export default async function DashboardPage() {
                 <p className="text-2xl font-bold tracking-tight text-foreground">
                   {credentials.length}
                 </p>
-                <p className="text-xs text-muted-foreground">Credentials</p>
+                <p className="text-xs text-muted-foreground">{t("common.credentials", { count: credentials.length })}</p>
               </div>
             </div>
           </CardContent>
@@ -103,9 +105,9 @@ export default async function DashboardPage() {
               </div>
               <div>
                 <p className="text-2xl font-bold tracking-tight text-foreground">
-                  Level {xp.level}
+                  {t("common.level", { level: xp.level })}
                 </p>
-                <p className="text-xs text-muted-foreground">Current Level</p>
+                <p className="text-xs text-muted-foreground">{t("dashboard.currentLevel")}</p>
               </div>
             </div>
           </CardContent>
@@ -116,18 +118,18 @@ export default async function DashboardPage() {
         {/* Enrolled courses */}
         <div className="lg:col-span-2">
           <h2 className="mb-4 text-xl font-semibold tracking-tight text-foreground">
-            Enrolled Courses
+            {t("dashboard.enrolledCourses")}
           </h2>
 
           {enrollments.length === 0 ? (
             <Card>
               <CardContent className="py-8 text-center">
                 <p className="text-sm text-muted-foreground">
-                  You haven&apos;t enrolled in any courses yet.
+                  {t("dashboard.noEnrollments")}
                 </p>
                 <Link href="/courses" className="mt-3 inline-block">
                   <Button size="sm">
-                    Browse Courses
+                    {t("common.browseCourses")}
                     <HugeiconsIcon icon={ArrowRight02Icon} size={14} data-icon="inline-end" />
                   </Button>
                 </Link>
@@ -170,8 +172,10 @@ export default async function DashboardPage() {
                               )}
                             </div>
                             <p className="mt-0.5 text-xs text-muted-foreground">
-                              {enrollment.completedLessons} of{" "}
-                              {enrollment.totalLessons} lessons
+                              {t("dashboard.lessonsProgress", {
+                                completed: enrollment.completedLessons,
+                                total: enrollment.totalLessons,
+                              })}
                             </p>
                           </div>
 
@@ -210,18 +214,18 @@ export default async function DashboardPage() {
           {/* Streak card */}
           <Card className="animate-fade-in" style={{ animationDelay: "100ms" }}>
             <CardHeader>
-              <CardTitle className="text-base">Streak</CardTitle>
-              <CardDescription>Keep your momentum going</CardDescription>
+              <CardTitle className="text-base">{t("dashboard.streak")}</CardTitle>
+              <CardDescription>{t("dashboard.keepMomentum")}</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="flex items-baseline gap-1">
                 <span className="text-4xl font-bold tracking-tight text-foreground">
                   {streak.current}
                 </span>
-                <span className="text-sm text-muted-foreground">days</span>
+                <span className="text-sm text-muted-foreground">{t("common.days")}</span>
               </div>
               <p className="mt-2 text-xs text-muted-foreground">
-                Longest: {streak.longest} days
+                {t("dashboard.longestStreak", { days: streak.longest })}
               </p>
             </CardContent>
           </Card>
@@ -229,13 +233,13 @@ export default async function DashboardPage() {
           {/* Credentials */}
           <Card className="animate-fade-in" style={{ animationDelay: "160ms" }}>
             <CardHeader>
-              <CardTitle className="text-base">Credentials</CardTitle>
-              <CardDescription>Your on-chain achievements</CardDescription>
+              <CardTitle className="text-base">{t("common.credentials", { count: credentials.length })}</CardTitle>
+              <CardDescription>{t("dashboard.onChainAchievements")}</CardDescription>
             </CardHeader>
             <CardContent>
               {credentials.length === 0 ? (
                 <p className="text-xs text-muted-foreground">
-                  Complete a course to earn your first credential.
+                  {t("dashboard.completeFirst")}
                 </p>
               ) : (
                 <div className="flex flex-col gap-2">
@@ -257,7 +261,7 @@ export default async function DashboardPage() {
                         </span>
                       </div>
                       <Badge variant="secondary" className="text-xs">
-                        Lvl {cred.level}
+                        {t("dashboard.lvl", { level: cred.level })}
                       </Badge>
                     </div>
                   ))}
@@ -270,7 +274,7 @@ export default async function DashboardPage() {
 
           <Link href="/courses">
             <Button variant="outline" size="lg" className="w-full">
-              Browse More Courses
+              {t("common.browseMoreCourses")}
               <HugeiconsIcon icon={ArrowRight02Icon} size={14} data-icon="inline-end" />
             </Button>
           </Link>
