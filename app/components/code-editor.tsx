@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
 interface CodeEditorProps {
+  showAiMentor?: boolean;
   value: string;
   onChange?: (value: string) => void;
   language?: string;
@@ -16,7 +17,7 @@ interface CodeEditorProps {
   minimap?: boolean;
 }
 
-export function CodeEditor({ value, onChange, language = "rust", readOnly = false, height = "400px", minimap = false }: CodeEditorProps) {
+export function CodeEditor({ value, onChange, language = "rust", readOnly = false, height = "400px", minimap = false showAiMentor = false }: CodeEditorProps) {
   const { resolvedTheme } = useTheme();
   const locale = useLocale();
   const editorRef = useRef<any>(null);
