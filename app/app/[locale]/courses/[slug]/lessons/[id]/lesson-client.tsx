@@ -269,7 +269,7 @@ export function LessonClient({ lesson, courseSlug, allLessons, prevLesson, nextL
         </div>
 
         {/* Code Editor Panel - 70% */}
-        <div className="flex-1 flex flex-col overflow-hidden bg-card">
+        <div className="flex-1 flex flex-col overflow-y-auto bg-card">
           {/* Toolbar */}
           <div className="h-12 border-b border-border flex items-center px-4 flex-shrink-0">
             <span className="text-sm font-medium">{t("codeEditor")}</span>
