@@ -89,11 +89,44 @@ const MOCK_LESSONS: Record<string, Lesson[]> = {
   "solana-fundamentals": [
     { id: "1", courseSlug: "solana-fundamentals", title: "What is Solana?", order: 1, xpReward: 100, type: "reading" },
     { id: "2", courseSlug: "solana-fundamentals", title: "Accounts & Programs", order: 2, xpReward: 100, type: "reading" },
-    { id: "3", courseSlug: "solana-fundamentals", title: "Your First Transaction", order: 3, xpReward: 100, type: "coding" },
+    { 
+      id: "3", 
+      courseSlug: "solana-fundamentals", 
+      title: "Your First Transaction", 
+      order: 3, 
+      xpReward: 100, 
+      type: "coding",
+      starterCode: `// Write a function that creates a simple transfer instruction\nfunction createTransferInstruction(from, to, amount) {\n  // Your code here\n  return {\n    keys: [\n      { pubkey: from, isSigner: true, isWritable: true },\n      { pubkey: to, isSigner: false, isWritable: true },\n    ],\n    programId: 'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA',\n    data: Buffer.from([2, 0, 0, 0, 0, 0, 0, 0])\n  };\n}\n\n// Test your function\nconsole.log(createTransferInstruction('sender', 'receiver', 1000));`,
+      testCases: [
+        { input: "N/A", expected: "object", description: "Returns a valid instruction object" }
+      ]
+    },
     { id: "4", courseSlug: "solana-fundamentals", title: "Program Derived Addresses", order: 4, xpReward: 100, type: "reading" },
-    { id: "5", courseSlug: "solana-fundamentals", title: "Build a Counter Program", order: 5, xpReward: 100, type: "coding" },
+    { 
+      id: "5", 
+      courseSlug: "solana-fundamentals", 
+      title: "Build a Counter Program", 
+      order: 5, 
+      xpReward: 100, 
+      type: "coding",
+      starterCode: `// Create a simple counter using Solana's Anchor framework\n// Fill in the missing parts\n\n#[program]\npub mod counter {\n    pub fn initialize(ctx: Context<Initialize>) -> Result<()> {\n        // Set counter to 0\n        ctx.accounts.counter.count = 0;\n        Ok(())\n    }\n\n    pub fn increment(ctx: Context<Increment>) -> Result<()> {\n        // Increment the counter\n        ctx.accounts.counter.count += 1;\n        Ok(())\n    }\n}\n\n// Simple test\nlet counter = { count: 0 };\ncounter.count += 1;\nconsole.log(counter.count === 1 ? "PASS" : "FAIL");`,
+      testCases: [
+        { input: "N/A", expected: "PASS", description: "Counter increments correctly" }
+      ]
+    },
     { id: "6", courseSlug: "solana-fundamentals", title: "Token Basics", order: 6, xpReward: 100, type: "reading" },
-    { id: "7", courseSlug: "solana-fundamentals", title: "SPL Token Transfers", order: 7, xpReward: 100, type: "coding" },
+    { 
+      id: "7", 
+      courseSlug: "solana-fundamentals", 
+      title: "SPL Token Transfers", 
+      order: 7, 
+      xpReward: 100, 
+      type: "coding",
+      starterCode: `// Create an SPL token transfer\nfunction createTokenTransferInstruction(source, destination, mint, authority, amount) {\n  // Return a valid transfer instruction\n  return {\n    programId: 'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA',\n    keys: [\n      { pubkey: source, isSigner: false, isWritable: true },\n      { pubkey: mint, isSigner: false, isWritable: false },\n      { pubkey: destination, isSigner: false, isWritable: true },\n      { pubkey: authority, isSigner: true, isWritable: false },\n    ],\n    data: Buffer.from([3, 0, 0, 0, 0, 0, 0, 0])\n  };\n}\n\n// Test\nconst result = createTokenTransferInstruction('source', 'dest', 'mint', 'auth', 1000);\nconsole.log(result && result.programId ? "PASS" : "FAIL");`,
+      testCases: [
+        { input: "N/A", expected: "PASS", description: "Creates valid SPL transfer" }
+      ]
+    },
     { id: "8", courseSlug: "solana-fundamentals", title: "Error Handling", order: 8, xpReward: 100, type: "reading" },
     { id: "9", courseSlug: "solana-fundamentals", title: "Testing with Bankrun", order: 9, xpReward: 100, type: "coding" },
     { id: "10", courseSlug: "solana-fundamentals", title: "CPI Deep Dive", order: 10, xpReward: 100, type: "reading" },
@@ -102,9 +135,31 @@ const MOCK_LESSONS: Record<string, Lesson[]> = {
   ],
   "anchor-development": [
     { id: "1", courseSlug: "anchor-development", title: "Why Anchor?", order: 1, xpReward: 150, type: "reading" },
-    { id: "2", courseSlug: "anchor-development", title: "Project Setup", order: 2, xpReward: 150, type: "coding" },
+    { 
+      id: "2", 
+      courseSlug: "anchor-development", 
+      title: "Project Setup", 
+      order: 2, 
+      xpReward: 150, 
+      type: "coding",
+      starterCode: `// Initialize a new Anchor project\n// Fill in the missing parts\n\nconst anchor = require('@coral-xyz/anchor');\n\nconst provider = anchor.AnchorProvider.local();\nanchor.setProvider(provider);\n\n// Create a new program\nconst program = anchor.workspace.MyProgram;\n\nconsole.log("Program ID:", program.programId.toString());\nconsole.log(provider.wallet.publicKey.toString());`,
+      testCases: [
+        { input: "N/A", expected: "Program ID:", description: "Project initializes correctly" }
+      ]
+    },
     { id: "3", courseSlug: "anchor-development", title: "Account Macros", order: 3, xpReward: 150, type: "reading" },
-    { id: "4", courseSlug: "anchor-development", title: "Instructions & Context", order: 4, xpReward: 150, type: "coding" },
+    { 
+      id: "4", 
+      courseSlug: "anchor-development", 
+      title: "Instructions & Context", 
+      order: 4, 
+      xpReward: 150, 
+      type: "coding",
+      starterCode: `// Define an Anchor instruction\n#[derive(Accounts)]\npub struct CreateUser<'info> {\n    #[account(\n        init,\n        payer = user,\n        space = 8 + User::INIT_SPACE\n    )]\n    pub user: Account<'info, User>,\n    #[account(mut)]\n    pub user: Signer<'info>,\n    pub system_program: Program<'info, System>,\n}\n\n// Implement the instruction\npub fn create_user(ctx: Context<CreateUser>, name: String) -> Result<()> {\n    ctx.accounts.user.name = name;\n    ctx.accounts.user.bump = ctx.bumps.user;\n    Ok(())\n}\n\n// Test: Simulate creating a user\nlet user = { name: "Alice", bump: 1 };\nconsole.log(user.name === "Alice" ? "PASS" : "FAIL");`,
+      testCases: [
+        { input: "N/A", expected: "PASS", description: "Creates user account correctly" }
+      ]
+    },
     { id: "5", courseSlug: "anchor-development", title: "Constraints & Validation", order: 5, xpReward: 150, type: "reading" },
     { id: "6", courseSlug: "anchor-development", title: "Build a Voting Program", order: 6, xpReward: 150, type: "coding" },
     { id: "7", courseSlug: "anchor-development", title: "Events & Logging", order: 7, xpReward: 150, type: "reading" },
@@ -113,7 +168,18 @@ const MOCK_LESSONS: Record<string, Lesson[]> = {
   "token-engineering": [
     { id: "1", courseSlug: "token-engineering", title: "Token-2022 Overview", order: 1, xpReward: 200, type: "reading" },
     { id: "2", courseSlug: "token-engineering", title: "Mint Extensions", order: 2, xpReward: 200, type: "reading" },
-    { id: "3", courseSlug: "token-engineering", title: "Build a Soulbound Token", order: 3, xpReward: 200, type: "coding" },
+    { 
+      id: "3", 
+      courseSlug: "token-engineering", 
+      title: "Build a Soulbound Token", 
+      order: 3, 
+      xpReward: 200, 
+      type: "coding",
+      starterCode: `// Create a soulbound token using Token-2022\n// Soulbound tokens cannot be transferred once minted\n\nconst { Keypair, Transaction, SystemProgram } = require('@solana/web3.js');\n\nfunction createSoulboundTokenMint() {\n  // Using Token-2022 with PermanentDelegate extension\n  const mintKeypair = Keypair.generate();\n  \n  const transaction = new Transaction();\n  \n  // Add create mint instruction\n  // Add PermanentDelegate extension (makes it soulbound)\n  \n  return {\n    mint: mintKeypair.publicKey,\n    transaction: transaction,\n    isSoulbound: true\n  };\n}\n\nconst result = createSoulboundTokenMint();\nconsole.log(result.isSoulbound ? "PASS" : "FAIL");`,
+      testCases: [
+        { input: "N/A", expected: "PASS", description: "Soulbound token created" }
+      ]
+    },
     { id: "4", courseSlug: "token-engineering", title: "Metaplex Core NFTs", order: 4, xpReward: 200, type: "reading" },
     { id: "5", courseSlug: "token-engineering", title: "Credential Issuance", order: 5, xpReward: 200, type: "coding" },
   ],
@@ -375,5 +441,8 @@ export const userService: UserService = {
 export const credentialService: CredentialService = {
   async getCredential(id: string): Promise<Credential | null> {
     return MOCK_CREDENTIALS.find((c) => c.id === id) ?? null;
+  },
+  async getCredentials(): Promise<Credential[]> {
+    return MOCK_CREDENTIALS;
   },
 };

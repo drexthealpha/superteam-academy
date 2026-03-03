@@ -41,7 +41,7 @@ export function Features() {
 
   return (
     <section className="border-t border-border bg-muted/30">
-      <div className="mx-auto max-w-6xl px-4 py-20 md:py-24">
+      <div className="mx-auto max-w-6xl px-8 py-20 md:py-24">
         <div className="mb-12 max-w-lg">
           <h2 className="text-2xl font-semibold tracking-tight text-foreground md:text-3xl">
             {t("heading")}

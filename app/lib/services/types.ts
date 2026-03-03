@@ -45,6 +45,14 @@ export interface Lesson {
   order: number;
   xpReward: number;
   type: "reading" | "coding" | "quiz";
+  starterCode?: string;
+  testCases?: TestCase[];
+}
+
+export interface TestCase {
+  input: string;
+  expected: string;
+  description?: string;
 }
 
 export interface Enrollment {
@@ -132,4 +140,5 @@ export interface UserService {
 
 export interface CredentialService {
   getCredential(id: string): Promise<Credential | null>;
+  getCredentials(walletAddress?: string): Promise<Credential[]>;
 }

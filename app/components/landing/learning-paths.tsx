@@ -49,7 +49,7 @@ export function LearningPaths() {
 
   return (
     <section>
-      <div className="mx-auto max-w-6xl px-4 py-20 md:py-24">
+      <div className="mx-auto max-w-6xl px-8 py-20 md:py-24">
         <div className="mb-12 flex items-end justify-between">
           <div className="max-w-lg">
             <h2 className="text-2xl font-semibold tracking-tight text-foreground md:text-3xl">

@@ -10,7 +10,7 @@ export function Hero() {
 
   return (
     <section className="relative overflow-hidden">
-      <div className="mx-auto max-w-6xl px-4 py-24 md:py-32">
+      <div className="mx-auto max-w-6xl px-8 py-24 md:py-32">
         <div className="flex max-w-2xl flex-col gap-6">
           <Badge variant="outline" className="w-fit animate-fade-in">
             {t("badge")}

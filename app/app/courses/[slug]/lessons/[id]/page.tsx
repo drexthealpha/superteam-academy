@@ -1,3 +1,7 @@
+import { notFound } from "next/navigation";
+import { courseService } from "@/lib/services";
+import { LessonClient } from "./lesson-client";
+
 export default async function LessonPage({
   params,
 }: {
@@ -5,14 +9,23 @@ export default async function LessonPage({
 }) {
   const { slug, id } = await params;
 
+  const lesson = await courseService.getLesson(slug, id);
+
+  if (!lesson) {
+    notFound();
+  }
+
+  const allLessons = await courseService.getLessons(slug);
+  const currentIndex = allLessons.findIndex((l) => l.id === id);
+  const prevLesson = currentIndex > 0 ? allLessons[currentIndex - 1] : undefined;
+  const nextLesson = currentIndex < allLessons.length - 1 ? allLessons[currentIndex + 1] : undefined;
+
   return (
-    <div className="py-8">
-      <h1 className="text-3xl font-bold tracking-tight text-foreground">
-        Lesson {id}
-      </h1>
-      <p className="mt-2 text-muted-foreground">
-        Course: {slug} — Interactive lesson view with code editor.
-      </p>
-    </div>
+    <LessonClient
+      lesson={lesson}
+      courseSlug={slug}
+      prevLesson={prevLesson}
+      nextLesson={nextLesson}
+    />
   );
 }

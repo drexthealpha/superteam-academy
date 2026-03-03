@@ -152,7 +152,8 @@
     "notifyLeaderboardDesc": "Seja notificado quando sua posição mudar."
   },
   "certificates": {
-    "heading": "Certificado",
+    "heading": "Certificados",
+    "description": "Visualize e gerencie suas credenciais obtidas.",
     "credential": "Credencial",
     "track": "Trilha",
     "issuedTo": "Emitido Para",
@@ -165,7 +166,10 @@
     "shareCredential": "Compartilhar Credencial",
     "downloadCertificate": "Baixar Certificado",
     "verifiedOnChain": "Verificado on-chain via Metaplex Core",
-    "soulbound": "Soulbound — não transferível"
+    "soulbound": "Soulbound — não transferível",
+    "noCertificates": "Nenhum certificado ainda",
+    "noCertificatesDesc": "Complete cursos para obter credenciais.",
+    "browseCourses": "Ver Cursos"
   },
   "locale": {
     "en": "English",

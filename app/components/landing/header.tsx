@@ -1,11 +1,17 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { LocaleSwitcher } from "@/components/locale-switcher";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { useWallet } from "@/hooks/use-wallet";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { UserIcon, Settings01Icon, Award01Icon, Logout01Icon } from "@hugeicons/core-free-icons";
 
 const navLinks = [
   { href: "/courses", key: "courses" },
@@ -16,6 +22,24 @@ const navLinks = [
 export function Header() {
   const t = useTranslations();
   const pathname = usePathname();
+  const router = useRouter();
+  const { ready, authenticated, login, logout, address, user } = useWallet();
+  const [isOpen, setIsOpen] = useState(false);
+
+  const formatAddress = (addr: string) => {
+    if (!addr) return '';
+    return `${addr.slice(0, 4)}...${addr.slice(-4)}`;
+  };
+
+  const getInitials = (addr: string) => {
+    if (!addr) return '??';
+    return addr.slice(0, 2).toUpperCase();
+  };
+
+  const handleLogout = async () => {
+    await logout();
+    router.push('/');
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background/80 backdrop-blur-sm">
@@ -42,7 +66,58 @@ export function Header() {
         <div className="flex items-center gap-3">
           <LocaleSwitcher />
           <ThemeToggle />
-          <Button size="lg">{t("common.connectWallet")}</Button>
+          {!ready ? (
+            <Button size="lg" disabled>
+              Loading...
+            </Button>
+          ) : authenticated ? (
+            <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
+              <DropdownMenuTrigger>
+                <div className="cursor-pointer rounded-full hover:opacity-80 transition-opacity">
+                  <Avatar>
+                    <AvatarFallback className="bg-primary/10 text-primary">
+                      {getInitials(address || '')}
+                    </AvatarFallback>
+                  </Avatar>
+                </div>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <div className="px-2 py-1.5 text-sm font-medium">
+                  {formatAddress(address || '')}
+                </div>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>
+                  <Link href="/profile" className="flex items-center gap-2 w-full">
+                    <HugeiconsIcon icon={UserIcon} size={16} strokeWidth={2} />
+                    Profile
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Link href="/settings" className="flex items-center gap-2 w-full">
+                    <HugeiconsIcon icon={Settings01Icon} size={16} strokeWidth={2} />
+                    Settings
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Link href="/certificates" className="flex items-center gap-2 w-full">
+                    <HugeiconsIcon icon={Award01Icon} size={16} strokeWidth={2} />
+                    Certificates
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>
+                  <button onClick={handleLogout} className="flex w-full items-center gap-2 text-destructive">
+                    <HugeiconsIcon icon={Logout01Icon} size={16} strokeWidth={2} />
+                    Logout
+                  </button>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <Button size="lg" onClick={login}>
+              {t("common.connectWallet")}
+            </Button>
+          )}
         </div>
       </div>
     </header>

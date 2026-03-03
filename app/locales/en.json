@@ -152,7 +152,8 @@
     "notifyLeaderboardDesc": "Get notified when your rank changes."
   },
   "certificates": {
-    "heading": "Certificate",
+    "heading": "Certificates",
+    "description": "View and manage your earned credentials.",
     "credential": "Credential",
     "track": "Track",
     "issuedTo": "Issued To",
@@ -165,7 +166,10 @@
     "shareCredential": "Share Credential",
     "downloadCertificate": "Download Certificate",
     "verifiedOnChain": "Verified on-chain via Metaplex Core",
-    "soulbound": "Soulbound — non-transferable"
+    "soulbound": "Soulbound — non-transferable",
+    "noCertificates": "No certificates yet",
+    "noCertificatesDesc": "Complete courses to earn credentials.",
+    "browseCourses": "Browse Courses"
   },
   "locale": {
     "en": "English",

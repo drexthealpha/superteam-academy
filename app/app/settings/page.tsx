@@ -22,18 +22,24 @@ import { setLocale } from "@/lib/actions";
 import { useLocale } from "next-intl";
 import { locales } from "@/i18n/config";
 import { useState, useTransition } from "react";
+import { useWallet } from "@/hooks/use-wallet";
 
 export default function SettingsPage() {
   const t = useTranslations();
   const { theme, setTheme } = useTheme();
   const currentLocale = useLocale();
   const [isPending, startTransition] = useTransition();
-
+  const { ready, authenticated, login, logout, address } = useWallet();
   const [notifications, setNotifications] = useState({
     newCourses: true,
     streakReminder: true,
     leaderboard: false,
   });
+
+  const formatAddress = (addr: string) => {
+    if (!addr) return '';
+    return `${addr.slice(0, 6)}...${addr.slice(-4)}`;
+  };
 
   function handleLocaleChange(locale: string) {
     startTransition(async () => {
@@ -136,12 +142,21 @@ export default function SettingsPage() {
             <div className="flex flex-col gap-3">
               <div className="flex items-center justify-between">
                 <span className="text-sm text-muted-foreground">{t("settings.walletStatus")}</span>
-                <span className="text-sm font-medium text-muted-foreground">{t("settings.walletNotConnected")}</span>
+                {authenticated && address ? (
+                  <span className="text-sm font-medium text-green-500">{formatAddress(address)}</span>
+                ) : (
+                  <span className="text-sm font-medium text-muted-foreground">{t("settings.walletNotConnected")}</span>
+                )}
               </div>
-              <p className="text-xs text-muted-foreground">{t("settings.walletConnectPrompt")}</p>
-              <Button size="sm" className="w-fit">
-                {t("common.connectWallet")}
-              </Button>
+              {authenticated && address ? (
+                <Button size="sm" variant="outline" className="w-fit" onClick={logout}>
+                  Disconnect Wallet
+                </Button>
+              ) : (
+                <Button size="sm" className="w-fit" onClick={login}>
+                  {t("common.connectWallet")}
+                </Button>
+              )}
             </div>
           </CardContent>
         </Card>
