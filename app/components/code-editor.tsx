@@ -17,7 +17,7 @@ interface CodeEditorProps {
   minimap?: boolean;
 }
 
-export function CodeEditor({ value, onChange, language = "rust", readOnly = false, height = "400px", minimap = false showAiMentor = false }: CodeEditorProps) {
+export function CodeEditor({ value, onChange, language = "rust", readOnly = false, height = "400px", minimap = false, showAiMentor = false }: CodeEditorProps) {
   const { resolvedTheme } = useTheme();
   const locale = useLocale();
   const editorRef = useRef<any>(null);
