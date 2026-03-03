@@ -19,7 +19,7 @@ interface CodeEditorProps {
 export function CodeEditor({ value, onChange, language = "rust", readOnly = false, height = "400px", minimap = false }: CodeEditorProps) {
   const { resolvedTheme } = useTheme();
   const locale = useLocale();
-  const editorRef = useRef(null);
+  const editorRef = useRef<any>(null);
   const [aiExplanation, setAiExplanation] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
