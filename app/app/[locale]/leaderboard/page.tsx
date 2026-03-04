@@ -9,6 +9,15 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
+interface LeaderboardEntry {
+  rank: number;
+  wallet: string;
+  username?: string;
+  xp: number;
+  level: number;
+  credentialCount: number;
+}
+
 export default function LeaderboardPage() {
   const { user, authenticated } = usePrivy();
   const [users, setUsers] = useState<any[]>([]);

@@ -20,6 +20,10 @@ import { courseService, sanityCourseService } from "@/lib/services";
 import type { Lesson } from "@/lib/services";
 import { levelBadgeClasses } from "@/lib/utils";
 import { getTranslations, getLocale } from "next-intl/server";
+import { EnrollButton } from "@/components/enroll-button";
+
+// Use courseService (stubs) for now - swap to sanityCourseService when Sanity has data
+const courses = courseService;
 
 function lessonTypeIcon(type: Lesson["type"]) {
   switch (type) {
@@ -39,8 +43,8 @@ export default async function CourseDetailPage({
 }) {
   const { slug } = await params;
   const [course, lessons] = await Promise.all([
-    sanityCourseService.getCourse(slug),
-    sanityCourseService.getLessons(slug),
+    courses.getCourse(slug),
+    courses.getLessons(slug),
   ]);
 
   if (!course) notFound();
@@ -113,14 +117,7 @@ export default async function CourseDetailPage({
                 </span>
               </div>
               <Separator className="my-1" />
-              <Button size="lg" className="w-full">
-                {t("common.enrollNow")}
-                <HugeiconsIcon
-                  icon={ArrowRight02Icon}
-                  size={14}
-                  data-icon="inline-end"
-                />
-              </Button>
+              <EnrollButton courseSlug={slug} t={t} />
               <p className="text-center text-xs text-muted-foreground">
                 {t("common.requiresWallet")}
               </p>
