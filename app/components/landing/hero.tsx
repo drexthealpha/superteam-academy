@@ -1,8 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { HugeiconsIcon } from "@hugeicons/react";
-import { ArrowRight02Icon } from "@hugeicons/core-free-icons";
 import Link from "next/link";
 import { useTranslations, useLocale } from "next-intl";
 
@@ -24,7 +22,7 @@ export function Hero() {
             <Link href={"/" + locale + "/onboarding"}>
               <Button size="lg" className="gap-2">
                 {tc("startLearningFree")}
-                <HugeiconsIcon icon={ArrowRight02Icon} size={16} data-icon="inline-end" />
+                <span aria-hidden="true">→</span>
               </Button>
             </Link>
             <Link href={"/" + locale + "/courses"}>

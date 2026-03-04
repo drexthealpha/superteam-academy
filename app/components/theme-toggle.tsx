@@ -2,8 +2,6 @@
 
 import { useTheme } from "next-themes";
 import { useState, useEffect } from "react";
-import { HugeiconsIcon } from "@hugeicons/react";
-import { Moon02Icon, Sun01Icon } from "@hugeicons/core-free-icons";
 
 export function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
@@ -29,15 +27,10 @@ export function ThemeToggle() {
     <button
       type="button"
       onClick={() => setTheme(isDark ? "light" : "dark")}
-      className="relative flex h-8 w-8 items-center justify-center rounded-lg border border-border bg-background p-0 transition-colors hover:bg-muted"
+      className="relative flex h-8 w-8 items-center justify-center rounded-lg border border-border bg-background p-0 text-sm transition-colors hover:bg-muted"
       aria-label={`Switch to ${isDark ? "light" : "dark"} mode`}
     >
-      <HugeiconsIcon
-        icon={isDark ? Moon02Icon : Sun01Icon}
-        size={16}
-        strokeWidth={2}
-        color="currentColor"
-      />
+      {isDark ? "🌙" : "☀️"}
     </button>
   );
 }

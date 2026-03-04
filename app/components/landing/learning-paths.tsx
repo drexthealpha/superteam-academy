@@ -8,8 +8,6 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { HugeiconsIcon } from "@hugeicons/react";
-import { ArrowRight02Icon } from "@hugeicons/core-free-icons";
 import Link from "next/link";
 import { levelBadgeClasses } from "@/lib/utils";
 import { useTranslations, useLocale } from "next-intl";
@@ -63,11 +61,7 @@ export function LearningPaths() {
           <Link href={`/${locale}/courses`} className="hidden md:block">
             <Button variant="ghost" size="sm">
               {t("common.viewAll")}
-              <HugeiconsIcon
-                icon={ArrowRight02Icon}
-                size={14}
-                data-icon="inline-end"
-              />
+              <span aria-hidden="true" className="ml-1">→</span>
             </Button>
           </Link>
         </div>
@@ -98,11 +92,7 @@ export function LearningPaths() {
                 <Link href={`/${locale}/courses/${path.slug}`} className="w-full">
                   <Button variant="outline" size="lg" className="w-full">
                     {t("common.startLearning")}
-                    <HugeiconsIcon
-                      icon={ArrowRight02Icon}
-                      size={14}
-                      data-icon="inline-end"
-                    />
+                    <span aria-hidden="true" className="ml-1">→</span>
                   </Button>
                 </Link>
               </CardFooter>
@@ -114,11 +104,7 @@ export function LearningPaths() {
           <Link href={`/${locale}/courses`}>
             <Button variant="ghost" size="sm">
               {t("common.viewAllCourses")}
-              <HugeiconsIcon
-                icon={ArrowRight02Icon}
-                size={14}
-                data-icon="inline-end"
-              />
+              <span aria-hidden="true" className="ml-1">→</span>
             </Button>
           </Link>
         </div>
