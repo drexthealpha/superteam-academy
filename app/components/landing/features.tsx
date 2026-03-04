@@ -4,13 +4,6 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
-import { HugeiconsIcon } from "@hugeicons/react";
-import {
-  Blockchain01Icon,
-  Award01Icon,
-  BookOpen01Icon,
-  Shield01Icon,
-} from "@hugeicons/core-free-icons";
 import { useTranslations } from "next-intl";
 
 export function Features() {
@@ -18,22 +11,22 @@ export function Features() {
 
   const features = [
     {
-      icon: BookOpen01Icon,
+      icon: "📚",
       title: t("interactiveCourses"),
       description: t("interactiveCoursesDesc"),
     },
     {
-      icon: Blockchain01Icon,
+      icon: "⛓️",
       title: t("onChainXp"),
       description: t("onChainXpDesc"),
     },
     {
-      icon: Award01Icon,
+      icon: "🏆",
       title: t("credentialNfts"),
       description: t("credentialNftsDesc"),
     },
     {
-      icon: Shield01Icon,
+      icon: "🔐",
       title: t("decentralized"),
       description: t("decentralizedDesc"),
     },
@@ -59,13 +52,8 @@ export function Features() {
               style={{ animationDelay: `${i * 80}ms` }}
             >
               <CardHeader>
-                <div className="mb-2 flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                  <HugeiconsIcon
-                    icon={feature.icon}
-                    size={18}
-                    strokeWidth={2}
-                    color="currentColor"
-                  />
+                <div className="mb-2 flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary text-xl">
+                  {feature.icon}
                 </div>
                 <CardTitle>{feature.title}</CardTitle>
                 <CardDescription>{feature.description}</CardDescription>

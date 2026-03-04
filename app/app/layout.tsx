@@ -3,15 +3,13 @@ import { Inter } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
-import { PrivyProvider } from "@/components/providers/privy-provider";
-import { SolanaWalletProvider } from "@/components/providers/solana-wallet-provider";
+import { ClientProviders } from "@/components/providers/client-providers";
 import "./globals.css";
 
 const inter = Inter({ 
   subsets: ["latin"], 
   variable: "--font-sans",
   display: 'swap',
-  preload: true,
 });
 
 export const metadata: Metadata = {
@@ -50,13 +48,9 @@ export default async function RootLayout({
         )}
       </head>
       <body className="antialiased font-sans">
-        <SolanaWalletProvider>
-        <PrivyProvider>
-          <NextIntlClientProvider messages={messages}>
-            <ThemeProvider>{children}</ThemeProvider>
-          </NextIntlClientProvider>
-        </PrivyProvider>
-        </SolanaWalletProvider>
+        <ClientProviders>
+          <ThemeProvider>{children}</ThemeProvider>
+        </ClientProviders>
       </body>
     </html>
   );
