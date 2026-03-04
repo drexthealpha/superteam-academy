@@ -1,6 +1,7 @@
 "use client";
 
 import bs58 from "bs58";
+import { supabase } from "@/lib/supabase";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useWallet } from "@/hooks/use-wallet";
@@ -55,7 +56,13 @@ export function EnrollButton({ courseSlug, t }: EnrollButtonProps) {
 
       const existingEnrollment = await connection.getAccountInfo(enrollmentPDA);
       if (existingEnrollment) {
-        setEnrolled(true);
+        await supabase.from("enrollments").upsert({
+        user_wallet: address,
+        course_id: courseSlug,
+        tx_signature: signature,
+        progress: 0,
+      }, { onConflict: "user_wallet,course_id" });
+      setEnrolled(true);
         return;
       }
 
@@ -88,6 +95,12 @@ export function EnrollButton({ courseSlug, t }: EnrollButtonProps) {
       const signature = bs58.encode(results[0].signature);
       await connection.confirmTransaction({ signature, blockhash, lastValidBlockHeight }, "confirmed");
 
+      await supabase.from("enrollments").upsert({
+        user_wallet: address,
+        course_id: courseSlug,
+        tx_signature: signature,
+        progress: 0,
+      }, { onConflict: "user_wallet,course_id" });
       setEnrolled(true);
     } catch (err) {
       console.error("Enrollment failed:", err);
