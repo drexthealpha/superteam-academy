@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useLocale } from "next-intl";
 import { useWallet } from "@/hooks/use-wallet";
@@ -30,29 +30,52 @@ import {
 } from "@/lib/services";
 import { useTranslations } from "next-intl";
 
+interface Course {
+  slug: string;
+  title: string;
+  lessonCount: number;
+}
+
+interface Enrollment {
+  courseSlug: string;
+  completedLessons: number;
+  totalLessons: number;
+  isCompleted: boolean;
+}
+
+interface Credential {
+  id: string;
+  track: string;
+  level: number;
+  issuedAt: string;
+}
+
 export default function DashboardPage() {
   const { address, authenticated } = useWallet();
   const t = useTranslations();
   const locale = useLocale();
-  const [mounted, setMounted] = useState(() => {
-    if (typeof window === 'undefined') return false;
-    return true;
-  });
+  const [mounted, setMounted] = useState(false);
   const [xp, setXp] = useState({ total: 0, level: 1 });
   const [streak, setStreak] = useState({ current: 0, longest: 0, lastActiveDate: "" });
-  const [credentials, setCredentials] = useState<Array<{ id: string; track: string; level: number; issuedAt: string }>>([]);
-  const [enrollments, setEnrollments] = useState<Array<{ courseSlug: string; completedLessons: number; totalLessons: number; isCompleted: boolean }>>([]);
-  const [courses, setCourses] = useState<Array<{ slug: string; title: string; lessonCount: number }>>([]);
+  const [credentials, setCredentials] = useState<Credential[]>([]);
+  const [enrollments, setEnrollments] = useState<Enrollment[]>([]);
+  const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
+
     async function loadData() {
       const coursesData = await courseService.getCourses();
       setCourses(coursesData);
       
-      const shouldUseOnChain = address && authenticated;
+      const shouldUseOnChain = Boolean(address && authenticated);
       
-      if (shouldUseOnChain) {
+      if (shouldUseOnChain && address) {
         try {
           const [xpData, streakData, creds, enrollData] = await Promise.all([
             onChainUserService.getXpSummary(address),
@@ -95,7 +118,7 @@ export default function DashboardPage() {
     }
     
     loadData();
-  }, [address, authenticated]);
+  }, [mounted, address, authenticated]);
 
   if (!mounted || loading) {
     return (
@@ -118,7 +141,7 @@ export default function DashboardPage() {
     );
   }
 
-  const courseMap = new Map(courses.map((c) => [c.slug, c]));
+  const courseMap = new Map(courses.map((c: Course) => [c.slug, c]));
 
   return (
     <div className="py-4">
