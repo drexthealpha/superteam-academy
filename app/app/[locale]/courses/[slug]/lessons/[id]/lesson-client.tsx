@@ -12,6 +12,8 @@ import { LessonReadingContent } from "@/components/lesson/lesson-reading-content
 import { LessonAiMentor } from "@/components/lesson/lesson-ai-mentor";
 import { useLessonTests } from "@/components/lesson/use-lesson-tests";
 import { useAiChat } from "@/components/lesson/use-ai-chat";
+import { useWallet } from "@/hooks/use-wallet";
+import { supabase } from "@/lib/supabase";
 
 interface LessonClientProps {
   lesson: Lesson;
@@ -32,6 +34,7 @@ export function LessonClient({ lesson, courseSlug, allLessons, prevLesson, nextL
   const t = useTranslations("lesson");
   const localeHook = useLocale();
   const currentLocale = locale || localeHook;
+  const { address } = useWallet();
 
   const [code, setCode] = useState(lesson.starterCode || "");
   const [files, setFiles] = useState<FileTab[]>([
@@ -49,6 +52,57 @@ export function LessonClient({ lesson, courseSlug, allLessons, prevLesson, nextL
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(true);
   const containerRef = useRef<HTMLDivElement>(null);
   const chatEndRef = useRef<HTMLDivElement>(null);
+
+  // Load initial completion state from Supabase
+  useEffect(() => {
+    if (!address) return;
+
+    async function loadCompletionState() {
+      const { data } = await supabase
+        .from("enrollments")
+        .select("completed_lessons")
+        .eq("user_wallet", address)
+        .eq("course_id", courseSlug)
+        .maybeSingle();
+
+      if (data?.completed_lessons?.includes(lesson.id)) {
+        setIsCompleted(true);
+      }
+    }
+
+    loadCompletionState();
+  }, [address, courseSlug, lesson.id]);
+
+  // Persist lesson completion to Supabase
+  const persistLessonCompletion = useCallback(async () => {
+    if (!address) return;
+
+    const { data: enrollment } = await supabase
+      .from("enrollments")
+      .select("completed_lessons")
+      .eq("user_wallet", address)
+      .eq("course_id", courseSlug)
+      .maybeSingle();
+
+    if (!enrollment) return;
+
+    const completedLessons: string[] = enrollment.completed_lessons || [];
+    if (completedLessons.includes(lesson.id)) return;
+
+    const updatedLessons = [...completedLessons, lesson.id];
+    const progress = Math.round((updatedLessons.length / allLessons.length) * 100);
+    const isCourseCompleted = updatedLessons.length >= allLessons.length;
+
+    await supabase
+      .from("enrollments")
+      .update({
+        completed_lessons: updatedLessons,
+        progress,
+        is_completed: isCourseCompleted,
+      })
+      .eq("user_wallet", address)
+      .eq("course_id", courseSlug);
+  }, [address, courseSlug, lesson.id, allLessons.length]);
 
   const currentIndex = allLessons.findIndex((l) => l.id === lesson.id);
   const progress = ((currentIndex + 1) / allLessons.length) * 100;
@@ -78,8 +132,9 @@ export function LessonClient({ lesson, courseSlug, allLessons, prevLesson, nextL
     const results = await runTests(code);
     if (results && results.length > 0 && results.every(r => r.passed)) {
       setIsCompleted(true);
+      persistLessonCompletion();
     }
-  }, [code, runTests]);
+  }, [code, runTests, persistLessonCompletion]);
 
   const handleSendChatMessage = useCallback((message: string) => {
     sendChatMessage(message, code);
@@ -92,6 +147,7 @@ export function LessonClient({ lesson, courseSlug, allLessons, prevLesson, nextL
 
   const handleMarkComplete = () => {
     setIsCompleted(true);
+    persistLessonCompletion();
   };
 
   useEffect(() => {

@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { getLocale } from "next-intl/server";
 import { courseService } from "@/lib/services";
 import { LessonClient } from "./lesson-client";
+import { EnrollmentGate } from "./enrollment-gate";
 
 export default async function LessonPage({
   params,
@@ -23,13 +24,15 @@ export default async function LessonPage({
   const nextLesson = currentIndex < allLessons.length - 1 ? allLessons[currentIndex + 1] : undefined;
 
   return (
-    <LessonClient
-      lesson={lesson}
-      courseSlug={slug}
-      allLessons={lessonsWithMeta}
-      prevLesson={prevLesson}
-      nextLesson={nextLesson}
-      locale={locale as "en" | "pt-BR" | "es"}
-    />
+    <EnrollmentGate courseSlug={slug} locale={locale}>
+      <LessonClient
+        lesson={lesson}
+        courseSlug={slug}
+        allLessons={lessonsWithMeta}
+        prevLesson={prevLesson}
+        nextLesson={nextLesson}
+        locale={locale as "en" | "pt-BR" | "es"}
+      />
+    </EnrollmentGate>
   );
 }

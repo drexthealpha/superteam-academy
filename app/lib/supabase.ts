@@ -98,6 +98,21 @@ export type Reply = {
   created_at: string;
 };
 
+// -- Enrollments --
+
+export type EnrollmentRow = {
+  id?: number;
+  user_wallet: string;
+  course_id: string;           // course slug (e.g., "solana-fundamentals")
+  tx_signature: string | null;
+  progress: number;            // 0-100 percentage
+  completed_lessons: string[]; // Array of lesson IDs
+  is_completed: boolean;
+  enrolled_at: string;
+};
+
+// -- Practice Challenges --
+
 export type PracticeChallenge = {
   id: string;
   slug: string;

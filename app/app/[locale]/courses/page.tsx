@@ -46,11 +46,18 @@ export default function CoursesPage() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { if (authenticated && wallet) loadEnrollments(); }, [authenticated, wallet]);
 
-  async function enroll(courseId: string) {
+  async function enroll(courseSlug: string) {
     if (!authenticated || !wallet) return;
-    setEnrolling(courseId);
-    await supabase.from('enrollments').upsert({ user_wallet: wallet, course_id: courseId, enrolled_at: new Date().toISOString() }, { onConflict: 'user_wallet,course_id' });
-    setEnrollments(prev => [...prev, courseId]);
+    setEnrolling(courseSlug);
+    await supabase.from('enrollments').upsert({
+      user_wallet: wallet,
+      course_id: courseSlug,
+      progress: 0,
+      completed_lessons: [],
+      is_completed: false,
+      enrolled_at: new Date().toISOString(),
+    }, { onConflict: 'user_wallet,course_id' });
+    setEnrollments(prev => [...prev, courseSlug]);
     setEnrolling(null);
   }
 
@@ -84,7 +91,7 @@ export default function CoursesPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {filtered.map(course => {
-            const enrolled = enrollments.includes(course.id);
+            const enrolled = enrollments.includes(course.slug);
             return (
               <div key={course.id} className="bg-gray-900 rounded-2xl border border-gray-800 overflow-hidden hover:border-gray-600 transition-all">
                 <div className={`h-32 bg-gradient-to-br ${CATEGORY_COLORS[course.category] || 'from-gray-700 to-gray-900'} flex items-center justify-center`}>
@@ -105,10 +112,10 @@ export default function CoursesPage() {
                     <span>⚡ {course.xp_reward} XP</span>
                   </div>
                   <button
-                    onClick={() => !enrolled && enroll(course.id)}
-                    disabled={enrolled || enrolling === course.id}
+                    onClick={() => !enrolled && enroll(course.slug)}
+                    disabled={enrolled || enrolling === course.slug}
                     className={`w-full py-3 rounded-xl font-semibold transition-colors ${enrolled ? 'bg-purple-500/20 text-purple-400 border border-purple-500/30 cursor-default' : 'bg-purple-600 hover:bg-purple-500 text-white'}`}>
-                    {enrolling === course.id ? 'Enrolling...' : enrolled ? '✓ Enrolled — Continue' : 'Enroll Free'}
+                    {enrolling === course.slug ? 'Enrolling...' : enrolled ? '✓ Enrolled — Continue' : 'Enroll Free'}
                   </button>
                 </div>
               </div>

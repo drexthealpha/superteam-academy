@@ -1,5 +1,7 @@
 import type { XpSummary, StreakData, Credential, UserProfile, LeaderboardEntry, Enrollment, EnrollmentAction, LessonAction } from './types';
 import { getXpBalance, getCredentialNfts, getLeaderboardData } from '@/lib/solana/client';
+import { supabase } from '@/lib/supabase';
+import type { EnrollmentRow } from '@/lib/supabase';
 
 const STUB_XP: XpSummary = { total: 2700, level: 5 };
 const STUB_STREAK: StreakData = { current: 5, longest: 12, lastActiveDate: new Date().toISOString().split('T')[0] };
@@ -104,7 +106,43 @@ export const onChainUserService = {
       return [];
     }
     
-    return [];
+    try {
+      const { data: enrollmentRows, error } = await supabase
+        .from('enrollments')
+        .select('*')
+        .eq('user_wallet', walletAddress);
+
+      if (error || !enrollmentRows || enrollmentRows.length === 0) {
+        return [];
+      }
+
+      // Get course slugs to look up lesson counts
+      const courseSlugs = enrollmentRows.map((e: EnrollmentRow) => e.course_id);
+      const { data: courseRows } = await supabase
+        .from('courses')
+        .select('slug, lesson_count')
+        .in('slug', courseSlugs);
+
+      const lessonCountMap = new Map(
+        (courseRows || []).map((c: { slug: string; lesson_count: number }) => [c.slug, c.lesson_count])
+      );
+
+      return enrollmentRows.map((row: EnrollmentRow) => {
+        const completedLessons = row.completed_lessons || [];
+        const totalLessons = lessonCountMap.get(row.course_id) || 0;
+
+        return {
+          courseSlug: row.course_id,
+          enrolledAt: row.enrolled_at,
+          completedLessons: completedLessons.length,
+          totalLessons,
+          isCompleted: row.is_completed || (totalLessons > 0 && completedLessons.length >= totalLessons),
+        };
+      });
+    } catch (error) {
+      console.error('Error fetching enrollments from Supabase:', error);
+      return [];
+    }
   },
 };
 
@@ -160,10 +198,11 @@ export async function getUserProfile(walletAddress?: string): Promise<UserProfil
     };
   }
   
-  const [xp, streak, credentials] = await Promise.all([
+  const [xp, streak, credentials, enrollments] = await Promise.all([
     onChainUserService.getXpSummary(walletAddress),
     onChainUserService.getStreak(walletAddress),
     onChainUserService.getCredentials(walletAddress),
+    onChainUserService.getEnrollments(walletAddress),
   ]);
   
   return {
@@ -172,6 +211,6 @@ export async function getUserProfile(walletAddress?: string): Promise<UserProfil
     xp,
     streak,
     credentials,
-    enrollments: [],
+    enrollments,
   };
 }
