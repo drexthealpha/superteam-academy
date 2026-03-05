@@ -22,6 +22,14 @@ function SkillRadar() {
   const center = 80;
   const maxRadius = 60;
   
+  const points = SKILLS.map(skill => {
+    const angle = (skill.angle - 90) * Math.PI / 180;
+    const r = maxRadius * skill.level / 100;
+    const x = center + r * Math.cos(angle);
+    const y = center + r * Math.sin(angle);
+    return `${x},${y}`;
+  }).join(' ');
+  
   return (
     <div className="border border-border rounded-xl p-6 bg-card">
       <h2 className="font-bold mb-4">Skill Radar</h2>
@@ -32,6 +40,7 @@ function SkillRadar() {
         {[0, 72, 144, 216, 288].map((angle, i) => (
           <line key={angle} x1={center} y1={center} x2={center + maxRadius * Math.sin(angle * Math.PI / 180)} y2={center - maxRadius * Math.cos(angle * Math.PI / 180)} stroke="#374151" strokeWidth="1" />
         ))}
+        <polygon points={points} fill="#a855f7" fillOpacity="0.2" stroke="#a855f7" strokeWidth="2" />
         {SKILLS.map((skill, i) => {
           const angle = (skill.angle - 90) * Math.PI / 180;
           const r = maxRadius * skill.level / 100;

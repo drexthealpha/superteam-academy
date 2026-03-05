@@ -25,7 +25,7 @@ The ultimate Solana learning platform for LATAM developers. Built for the Supert
 ## Local Development
 ```bash
 git clone https://github.com/drexthealpha/superteam-academy
-cd superteam-academy/app
+cd superteam-academy/onchain-academy/app
 npm install
 cp .env.example .env.local
 # Fill in env vars (see below)
